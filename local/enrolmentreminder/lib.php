@@ -32,8 +32,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(dirname(__FILE__).'/userselector.php');
-
 function local_enrolmentreminder_extends_settings_navigation($settingsnav) {
     global $PAGE;
     global $DB;
@@ -128,16 +126,16 @@ function local_enrolmentreminder_send_messages($events) {
 function local_enrolmentreminder_get_message_plaintext($course, $user, $ending) {
     global $CFG;
     require_once($CFG->dirroot . '/local/enrolmentreminder/locallib.php');
-    $reminder = local_enrolmentreminder_getexisting($course, false);
+    $reminder = local_enrolmentreminder_getexisting($course->id, false);
     if (!empty($reminder->tmpltext)) {
         return enrolmentreminder_processtemplate($reminder->tmpltext, array('course'=>$course,'user'=>$user,'enddate'=>$ending, 'CFG'=>$CFG));
     }
 }
 
-function local_enrolmentreminder_getexisting($course, $defaultifnone = false) {
+function local_enrolmentreminder_getexisting($courseid, $defaultifnone = false) {
     global $DB;
 
-    $result = $DB->get_record('enrolmentreminder', array('courseid'=>$course->id));
+    $result = $DB->get_record('enrolmentreminder', array('courseid'=>$courseid));
     if ($result) {
         return $result;
     } else {
