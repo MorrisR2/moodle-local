@@ -66,18 +66,18 @@ function local_enrolmentreminder_cron() {
 
     $lastcron = get_config('local_enrolmentreminder', 'lastcron') ?: (time() - (24 * 3600));
     $events = local_enrolmentreminder_get_events($lastcron + 1, time());
-    mtrace("Found " . count($events) . " expiring enrollments to send reminders for.\n");
+    mtrace("Found " . count($events) . " expiring enrollments");
     local_enrolmentreminder_send_messages($events);
 }
 
 
 function local_enrolmentreminder_get_events($timestart, $timeend) {
     global $DB;
-    $query = "SELECT ue.id, timestart, timeend, e.courseid, userid
-                  FROM {user_enrolments} ue, {enrol} e, {enrolmentreminder} er
-                  WHERE e.courseid=er.courseid AND ue.enrolid=e.id AND 
-                      timeend >= :timestart + er.leadtime AND 
-                      timeend <= :timeend + er.leadtime AND ue.status != " . ENROL_USER_SUSPENDED;
+    $query = "SELECT ue.id, timestart, timeend, e.courseid, userid " . 
+                  "FROM {user_enrolments} ue, {enrol} e, {enrolmentreminder} er ".
+                  "WHERE e.courseid=er.courseid AND ue.enrolid=e.id AND " .
+                      "timeend >= :timestart + er.leadtime AND " . 
+                      "timeend <= :timeend + er.leadtime AND ue.status != " . ENROL_USER_SUSPENDED;
 
     return $DB->get_records_sql($query, array('timestart'=>$timestart,'timeend'=>$timeend));
 }
@@ -85,6 +85,8 @@ function local_enrolmentreminder_get_events($timestart, $timeend) {
 
 function local_enrolmentreminder_send_messages($events) {
     global $DB;
+    global $CFG;
+
     require_once($CFG->libdir.'/completionlib.php');
 
     $eventdata = new stdClass();
@@ -104,8 +106,9 @@ function local_enrolmentreminder_send_messages($events) {
         if (empty($completioninfo[$event->courseid])) {
             $completioninfo[$event->courseid] = new completion_info($course);
         }
-        if ( $completioninfo->is_course_complete($ue->userid) ) {
-            return;
+        if ( $completioninfo[$event->courseid]->is_course_complete($event->userid) ) {
+            mtrace("user $event->userid has completed course $event->courseid");
+            continue;
         }
         // use timeend for enrolments, timestart for events.
         $ending = userdate($event->timeend, $dateformat);
@@ -137,11 +140,12 @@ function local_enrolmentreminder_getexisting($courseid, $defaultifnone = false) 
 
     $result = $DB->get_record('enrolmentreminder', array('courseid'=>$courseid));
     if ($result) {
+        $result->submitbutton = 'Update reminder';
         return $result;
     } else {
         if ($defaultifnone) {
            $default = file_get_contents(__DIR__.'/emailtemplates/default.php.inc');
-           return array('courseid' => $courseid, 'tmpltext' => $default);
+           return array('courseid' => $courseid, 'tmpltext' => $default, 'submitbutton' => 'Add new reminder');
         }
     }
 }

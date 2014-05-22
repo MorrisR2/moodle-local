@@ -113,6 +113,7 @@ function local_enrolmentreminder_addform($data) {
     if ($fromform = $mform->get_data()) {
         local_enrolmentreminder_add($fromform);
         $_REQUEST['courseid'] = $fromform->courseid;
+        $result->submitbutton = 'Update again';
         $mform->display();
     } else {
         $mform->set_data($data);
