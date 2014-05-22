@@ -111,12 +111,10 @@ function local_enrolmentreminder_choosecourse() {
 function local_enrolmentreminder_addform($data) {
     $mform = new enrolmentreminderadd_form();
     if ($fromform = $mform->get_data()) {
-        // print_r($fromform);
         local_enrolmentreminder_add($fromform);
         $_REQUEST['courseid'] = $fromform->courseid;
         $mform->display();
     } else {
-        // print_r($data);
         $mform->set_data($data);
         $mform->display();
     }

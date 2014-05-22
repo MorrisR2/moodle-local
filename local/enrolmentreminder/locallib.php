@@ -1,45 +1,5 @@
 <?php
 
-
-function enrolmentreminder_add_expire_calendar($courseid, $userid, $endtime, $ue_id = null) {
-    global $CFG;
-    global $client;
-
-    require_once($CFG->dirroot . '/calendar/lib.php');
-    $event = new stdClass;
-    $event->name         = 'Enrollment expires';
-    $event->description  = 'Please complete the course before this date.';
-    $event->courseid     = $courseid;
-    $event->groupid      = 0;
-    $event->userid       = $userid;
-    $event->instance     = $ue_id;
-    $event->eventtype    = 'enrolmentexpires';
-    $event->timestart    = $endtime;
-    $event->visible      = true;
-    $event->timeduration = 0;
-    $created = calendar_event::create($event);
-
-    /*
-        $event = new calendar_event($properties);
-        if ($event->update($properties)) {
-    */
-}
-
-
-/**
- * Returns the correct link for the calendar event.
- * 
- * @return string complete url for the event
- */
-function enrolmentreminder_generate_event_link() {
-    $params = array('view' => 'day', 'cal_d' => date('j', $this->event->timestart),
-        'cal_m' => date('n', $this->event->timestart), 'cal_y' => date('Y', $this->event->timestart));
-    $calurl = new moodle_url('/calendar/view.php', $params);
-    $calurl->set_anchor('event_'.$this->event->id);
-
-    return $calurl->out(false);
-}
-
 function enrolmentreminder_processtemplate($string, array $params) {
     foreach($params as $name=>$param) {
          if ($param !== NULL) {

@@ -32,11 +32,12 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['modulename'] = 'enrolmentreminder';
 $string['modulenameplural'] = 'enrolmentreminder';
-$string['modulename_help'] = 'Use the enrolmentreminder module for... | The enrolmentreminder module allows...';
+$string['modulename_help'] = 'Sends a message to users when their enrolment is aboput to expire and they haven not finished the course.';
 $string['enrolmentreminderfieldset'] = 'Custom example fieldset';
 $string['enrolmentremindername'] = 'Course ending reminder';
-$string['enrolmentremindername_help'] = 'This is the content of the help tooltip associated with the module name field. Markdown syntax is supported.';
+$string['enrolmentremindername_help'] = '';
 $string['enrolmentreminder'] = 'Course ending reminder';
+$string['durationlabel'] = 'Lead time';
 $string['messageprovider:coursecompleted'] = 'Course completed';
 $string['pluginadministration'] = 'enrolmentreminder administration';
 $string['pluginname'] = 'enrolmentreminder';

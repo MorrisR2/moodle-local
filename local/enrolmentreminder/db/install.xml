@@ -9,6 +9,7 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="courseid"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="16" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="tmpltext"/>
         <FIELD NAME="tmpltext" TYPE="char" LENGTH="1024" NOTNULL="true" SEQUENCE="false" PREVIOUS="courseid"/>
+        <FIELD NAME="leadtime" TYPE="int" LENGTH="7" NOTNULL="true" DEFAULT="259200" SEQUENCE="false" COMMENT="Lead time in seconds"/>
     </FIELDS>
     <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
